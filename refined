@@ -1,0 +1,27 @@
+from dual_clocking_qubit import DualClockingConfig, DualClockingController, require_sqi_edge_fraction
+import math
+
+cfg = DualClockingConfig(
+    omega_d = 2*math.pi*5.0e9,
+    Omega_amp = 2*math.pi*25e6,
+    t_drive1 = 40e-9, t_probe = 20e-9, t_drive2 = 40e-9,
+    epsilon_probe = 0.05,
+    T1 = 30e-6, Tphi = 40e-6,
+    prefer_virtual_Z = True, apply_corrections = True,
+    meas_axis = 'z', meas_error = 0.015,
+    enable_two_tone = False,
+
+    # NEW: feed-forward on mid-probe result
+    feedback_on_probe = True,
+    feedback_mode = "virtual_z",    # or: physical_x / physical_y / physical_z
+    feedback_theta_if0 = 0.0,       # radians if outcome_mid == 0
+    feedback_theta_if1 = 0.1,       # radians if outcome_mid == 1
+    ff_physical_duration = 5e-9,    # dwell penalty if using physical_* mode
+)
+
+require_sqi_edge_fraction(0.8, threshold=cfg.require_sqi_edge_fraction)
+
+ctrl = DualClockingController(cfg).build_schedule()
+res = ctrl.simulate(init_state="|0>", dt=0.25e-9, record=True, seed=11)
+
+print(res["feed_forward_events"])   # inspect applied conditional action(s)
