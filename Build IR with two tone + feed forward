@@ -1,0 +1,13 @@
+import math
+from dual_clocking_qubit import DualClockingConfig, DualClockingController, to_pulse_ir
+
+cfg = DualClockingConfig(
+    omega_d=2*math.pi*5e9, Omega_amp=2*math.pi*20e6,
+    t_drive1=20e-9, t_probe=10e-9, t_drive2=20e-9,
+    epsilon_probe=0.05,
+    enable_two_tone=True, Omega_amp2=2*math.pi*5e6, drive2_phase=math.pi/4,
+    feedback_on_probe=True, feedback_mode="virtual_z",
+    feedback_theta_if1=0.1, remap_phase_for_virtual=True,
+)
+ctrl = DualClockingController(cfg).build_schedule()
+ir = to_pulse_ir(ctrl, conditioned=True)
