@@ -1,0 +1,4 @@
+from dual_clocking_qubit import export_qiskit_pulse
+qk = export_qiskit_pulse(ir, fs=1e9, use_conditionals=True)
+# If Qiskit isn't available or conditionals not supported, you'll either get
+# branch schedules or a JSON descriptor with "requires": "qiskit".
