@@ -1,0 +1,6 @@
+from dual_clocking_qubit import export_qiskit_pulse
+
+qk = export_qiskit_pulse(ir, fs=1e9)   # if conditional and no assume_outcome → returns both branches
+# qk["branch0"] / qk["branch1"] if conditional — each is a ScheduleBlock if qiskit is installed.
+# If qiskit is not installed, you get a JSON-like dict with "requires": "qiskit" and the events.
+from dual_clocking_qubit import export_qiskit_pulse 
