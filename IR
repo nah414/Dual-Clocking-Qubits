@@ -1,0 +1,2 @@
+ir.channels  # {"d0": drive, "m0": measure, "acq0": acquire}
+ir.events    # time-ordered list of {op, ch, t0, duration, ...}
