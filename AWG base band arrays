@@ -1,0 +1,8 @@
+from dual_clocking_qubit import export_awg_baseband
+awg = export_awg_baseband(ir, fs=1e9)
+
+# Conditional present → both branches:
+for br in ("branch0", "branch1"):
+    time = awg[br]["time"]
+    for ch, sig in awg[br]["channels"].items():
+        I, Q = sig["I"], sig["Q"]
