@@ -1,0 +1,6 @@
+sweep = ctrl.calibrate_probe_sweep(
+    epsilons=(0.0, 0.02, 0.05, 0.1, 0.15),
+    tprobes=(10e-9, 20e-9, 30e-9),
+    trials=200
+)
+# sweep["MI_bits"], sweep["BackAction"], sweep["epsilons"], sweep["tprobes"]
