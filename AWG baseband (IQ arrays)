@@ -1,0 +1,8 @@
+from dual_clocking_qubit import export_awg_baseband
+awg = export_awg_baseband(ir, fs=1e9)  # Hz
+
+if "branch0" in awg:     # conditional present → both branches
+    I0, Q0, t0 = awg["branch0"]["I"], awg["branch0"]["Q"], awg["branch0"]["time"]
+    I1, Q1, t1 = awg["branch1"]["I"], awg["branch1"]["Q"], awg["branch1"]["time"]
+else:                    # no conditional → single waveform
+    I, Q, t = awg["waveform"]["I"], awg["waveform"]["Q"], awg["waveform"]["time"]
