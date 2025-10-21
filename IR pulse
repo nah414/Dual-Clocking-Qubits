@@ -1,0 +1,3 @@
+from dual_clocking_qubit import to_pulse_ir
+
+ir = to_pulse_ir(ctrl, conditioned=True)  # includes a conditional on probe outcome if enabled
