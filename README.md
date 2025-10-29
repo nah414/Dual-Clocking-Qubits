@@ -20,3 +20,13 @@ res = ctrl.simulate(init_state="|0>", dt=0.25e-9, record=True, seed=7)
 print(res["bloch_final"], res["meas_outcome"])
 print(res.get("probe_snapshot"))  # mid-circuit readout estimate
 
+## Example programs
+
+```bash
+# 90° pulse followed by an NMR FID
+make run-nmr
+
+# Simple two-lobe gradient echo
+make run-nmr-grad
+```
+

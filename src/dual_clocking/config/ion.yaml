@@ -1,0 +1,7 @@
+backend: ion
+dt: 1e-6
+omega_0: 7.94e7
+omega_probe: 7.9402e7
+rate_scale: 5.0e4
+beta_dephasing: 1.0e-6
+aom_latency: 1e-6

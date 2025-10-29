@@ -1,0 +1,5 @@
+backend: superconducting
+dt: 1e-9
+omega_ge: 5.0e9
+omega_r: 7.0e9
+k_dephasing: 2.0e6
