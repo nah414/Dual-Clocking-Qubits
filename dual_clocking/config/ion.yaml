@@ -1,0 +1,11 @@
+backend: trapped-ion
+parameters:
+  raman_frequency_MHz: 80.0
+  photon_collection_efficiency: 0.35
+  dt_us: 1.0
+schedule:
+  t_drive_1_us: 10.0
+  t_probe_us: 5.0
+  t_drive_2_us: 12.0
+  two_tone: false
+  probe_threshold: 0.05
