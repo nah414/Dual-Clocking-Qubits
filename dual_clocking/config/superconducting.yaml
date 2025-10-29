@@ -1,0 +1,11 @@
+backend: superconducting
+parameters:
+  drive_frequency_GHz: 5.0
+  readout_frequency_GHz: 6.5
+  dt_ns: 1.0
+schedule:
+  t_drive_1_ns: 40.0
+  t_probe_ns: 20.0
+  t_drive_2_ns: 40.0
+  two_tone: true
+  probe_threshold: -0.1
