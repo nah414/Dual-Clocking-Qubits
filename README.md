@@ -1,32 +1,61 @@
-from dual_clocking_qubit import (
-    DualClockingConfig, DualClockingController, require_sqi_edge_fraction
-)
+# Dual-Clocking Qubits
 
-cfg = DualClockingConfig(
-    omega_d = 2*math.pi*5.0e9,   # metadata for downstream pulse mappers
-    Omega_amp = 2*math.pi*25e6,  # 25 MHz Rabi
-    t_drive1 = 40e-9, t_probe = 20e-9, t_drive2 = 40e-9,
-    epsilon_probe = 0.05, T1 = 30e-6, Tphi = 40e-6,
-    prefer_virtual_Z = True, apply_corrections = True,
-    meas_axis = 'z', meas_error = 0.015, enable_two_tone = False
-)
+Dual clocking uses independent **drive** and **probe** references to interrogate a
+qubit or spin ensemble between two timing domains. This repository offers a small
+Python package that demonstrates how a scheduler can target different hardware
+models while sharing the same experiment descriptions.
 
-require_sqi_edge_fraction(0.8, threshold=cfg.require_sqi_edge_fraction)
+The package currently ships with three simulator-style backends:
 
-ctrl = DualClockingController(cfg)
-ctrl.build_schedule()
-res = ctrl.simulate(init_state="|0>", dt=0.25e-9, record=True, seed=7)
+- `SuperconductingBackend` – a transmon-inspired control and readout model.
+- `TrappedIonBackend` – resonant Raman drive with photon-counting probe rates.
+- `NMRBackend` – a bulk NMR ensemble supporting gradient echoes and FIDs.
 
-print(res["bloch_final"], res["meas_outcome"])
-print(res.get("probe_snapshot"))  # mid-circuit readout estimate
+Each backend implements the same abstract interface so you can swap targets with
+one import change.
 
-## Example programs
+## Installation
+
+Create a virtual environment and install the project in editable mode:
 
 ```bash
-# 90° pulse followed by an NMR FID
-make run-nmr
-
-# Simple two-lobe gradient echo
-make run-nmr-grad
+python -m venv .venv
+source .venv/bin/activate
+pip install -U pip
+pip install -e .[dev]
 ```
 
+The editable install exposes all three backends from `dual_clocking.backends`
+without additional extras, so superconducting, trapped-ion, and NMR workflows
+are available immediately.
+
+## Quick start
+
+Run the demo Ramsey experiment against any backend via the helper script:
+
+```bash
+python main.py --backend sc   # superconducting
+python main.py --backend ion  # trapped ion
+python main.py --backend nmr  # NMR ensemble
+```
+
+For NMR-specific experiments the repository also includes richer examples:
+
+```bash
+make run-nmr       # 90° pulse followed by an FID acquisition
+make run-nmr-grad  # two-lobe gradient echo demonstration
+```
+
+All demos use the shared `DualClockScheduler` timeline abstraction. See
+`examples/` and `scripts/` for reference code.
+
+## Testing
+
+Run the test suite with:
+
+```bash
+pytest -q
+```
+
+Tests focus on scheduler semantics to ensure drive, probe, gradient, and delay
+operations behave consistently across backends.
