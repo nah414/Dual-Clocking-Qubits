@@ -1,0 +1,59 @@
+name: PhantomRaven Supply-Chain Scan
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "17 5 * * 1"  # Weekly Monday 05:17 UTC scan
+
+jobs:
+  scan:
+    name: Scan npm manifests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify phantomraven.py present
+        shell: bash
+        run: |
+          if [ ! -f "phantomraven.py" ]; then
+            echo "::error file=phantomraven.py::phantomraven.py not found at repo root."
+            exit 1
+          fi
+
+      - name: Run PhantomRaven scanner (JSON mode)
+        shell: bash
+        run: |
+          python phantomraven.py . --json | tee phantomraven_report.json
+          echo "PR_HAS_FINDINGS=$(python - <<'PY'
+import json,sys
+j=json.load(open('phantomraven_report.json'))
+print('true' if (j.get('malicious') or j.get('remote_urls')) else 'false')
+PY
+)" >> $GITHUB_ENV
+
+      - name: Upload scan artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: phantomraven-report-${{ matrix.os }}
+          path: phantomraven_report.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Fail on findings
+        if: env.PR_HAS_FINDINGS == 'true'
+        shell: bash
+        run: |
+          echo "::error::PhantomRaven found malicious packages or suspicious remote URLs."
+          exit 1
