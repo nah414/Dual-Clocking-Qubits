@@ -1,7 +1,5 @@
 """NMR backend description."""
 
-"""NMR backend description."""
-
 from __future__ import annotations
 
 from typing import Dict

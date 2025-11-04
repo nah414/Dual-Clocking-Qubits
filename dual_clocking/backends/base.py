@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Dict, Mapping, MutableMapping
+from typing import Dict, Mapping, MutableMapping, Optional
 
 
 @dataclass
@@ -39,3 +39,17 @@ class DualClockingBackend(ABC):
 
         payload.setdefault("backend", self.name)
         payload.setdefault("dt", self.dt)
+
+    def teleport_metadata(
+        self,
+        *,
+        pair_id: str,
+        fidelity_target: float,
+    ) -> Optional[Dict[str, object]]:
+        """Return metadata describing an entanglement teleportation event.
+
+        Backends that do not implement teleportation can return ``None`` and the
+        scheduler will omit the associated operation from the schedule.
+        """
+
+        return None
