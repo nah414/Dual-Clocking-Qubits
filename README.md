@@ -59,3 +59,19 @@ and any feed-forward corrections that were applied.
 
 See `dual_clocking/README_BACKENDS.md` for a concise overview of the available
 hardware abstractions.
+
+## Security scanning with PhantomRaven
+
+Run the bundled PhantomRaven CLI to ensure npm manifests and lockfiles are free
+from known-bad packages and suspicious remote URLs:
+
+```bash
+# run a scan
+python phantomraven.py .
+
+# fail CI on findings with JSON output
+python phantomraven.py . --json
+
+# install a pre-commit that routes through this script
+python phantomraven.py --install-precommit
+```
