@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dual-clocking-qubits"
+version = "0.1.0"
+description = "Dual clocking methods for qubit operations — drive–probe–drive scheduling, backends, and exports."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Project Authors" }]
+keywords = ["quantum", "qubits", "control", "pulse", "NMR", "Ramsey"]
+
+# Keep core deps lean; pull accelerators behind extras.
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.10",
+]
+
+[project.optional-dependencies]
+# JIT / acceleration
+fast = ["numba>=0.59"]
+# Export / ecosystem interop
+export = ["qiskit>=1.2"]
+# Dev & CI
+dev = [
+  "pytest>=7.0",
+  "pytest-benchmark>=4.0",
+  "ruff>=0.5.0",
+  "black>=24.0",
+  "mypy>=1.5",
+  "nox>=2024.4.15",
+  "build>=1.2.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/nah414/Dual-Clocking-Qubits"
+Issues   = "https://github.com/nah414/Dual-Clocking-Qubits/issues"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+# Include the library and any subpackages (e.g., dual_clocking.fast)
+include = ["dual_clocking*", "dualdrive*"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B"]
+ignore = ["E203", "E266", "E501"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+pretty = true
